@@ -94,7 +94,7 @@
       var corner = document.createElement('div');
       corner.className = 'corner';
       parent_node.appendChild(corner);
-      for (item in styles) {
+      for (var item in styles) {
         corner.style[item] = styles[item];
       }
       bind(corner, 'mouseover', function(e) {
