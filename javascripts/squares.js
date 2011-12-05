@@ -243,6 +243,9 @@
 
           if (left < 0 && top < 0) {              // north-west
           } else if (left < 0 && bottom < 0) {    // south-west
+            square.style.height = ((square_height0 + dy < 12) ? 12 : (square_height0 + dy))  + 'px';
+            square.style.width = ((square_width0 - dx < 12) ? 12 : (square_width0 - dx)) + 'px';
+            parseInt(square.style.width) > 12 ? (square.style.left = square_x0 + dx + 'px') : true;
           } else if (right < 0 && top < 0) {      // north-east
             square.style.height = ((square_height0 - dy < 12) ? 12 : (square_height0 - dy))  + 'px';
             square.style.width = ((square_width0 + dx < 12) ? 12 : (square_width0 + dx)) + 'px';
