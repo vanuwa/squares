@@ -242,6 +242,10 @@
           var bottom = parseInt(captured_corner.style.bottom); isNaN(bottom) ? bottom = 0 : true;
 
           if (left < 0 && top < 0) {              // north-west
+            square.style.height = ((square_height0 - dy < 12) ? 12 : (square_height0 - dy))  + 'px';
+            square.style.width = ((square_width0 - dx < 12) ? 12 : (square_width0 - dx)) + 'px';
+            parseInt(square.style.width) > 12 ? (square.style.left = square_x0 + dx + 'px') : true;
+            parseInt(square.style.height) > 12 ? (square.style.top = square_y0 + dy + 'px') : true;
           } else if (left < 0 && bottom < 0) {    // south-west
             square.style.height = ((square_height0 + dy < 12) ? 12 : (square_height0 + dy))  + 'px';
             square.style.width = ((square_width0 - dx < 12) ? 12 : (square_width0 - dx)) + 'px';
