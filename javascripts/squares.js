@@ -209,6 +209,8 @@
         corner_x0 = captured_corner.offsetLeft;
         conrner_y0 = captured_corner.offsetTop;
 
+        square_x0 = captured_corner.parentNode.offsetLeft;
+        square_y0 = captured_corner.parentNode.offsetTop;
         square_height0 = captured_corner.parentNode.offsetHeight;
         square_width0 = captured_corner.parentNode.offsetWidth;
 
@@ -242,6 +244,9 @@
           if (left < 0 && top < 0) {              // north-west
           } else if (left < 0 && bottom < 0) {    // south-west
           } else if (right < 0 && top < 0) {      // north-east
+            square.style.height = ((square_height0 - dy < 12) ? 12 : (square_height0 - dy))  + 'px';
+            square.style.width = ((square_width0 + dx < 12) ? 12 : (square_width0 + dx)) + 'px';
+            parseInt(square.style.height) > 12 ? (square.style.top = square_y0 + dy + 'px') : true;
           } else if (right < 0 && bottom < 0) {   // south-east
             square.style.height = ((square_height0 + dy < 12) ? 12 : (square_height0 + dy))  + 'px';
             square.style.width = ((square_width0 + dx < 12) ? 12 : (square_width0 + dx)) + 'px';
