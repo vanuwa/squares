@@ -1,4 +1,4 @@
-# Resizible and dragable squares 
+# Resizable and draggable squares
 
 ## Usage
 
