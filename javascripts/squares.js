@@ -81,7 +81,29 @@
       var el = document.createElement('div');
       el.id = new Date().getTime();
       el.className = 'square';
+
+      self.nw_corner = build_corner(el, {top: '-4px', left: '-4px'},'nw-resize');
+      self.ne_corner = build_corner(el, {top: '-4px', right: '-4px'}, 'ne-resize');
+      self.sw_corner = build_corner(el, {bottom: '-4px', left: '-4px'}, 'sw-resize');
+      self.se_corner = build_corner(el, {bottom: '-4px', right: '-4px'}, 'se-resize');
+
       return el;
+    };
+
+    var build_corner = function(parent_node, styles, cursor) {
+      var corner = document.createElement('div');
+      corner.className = 'corner';
+      parent_node.appendChild(corner);
+      for (item in styles) {
+        corner.style[item] = styles[item];
+      }
+      bind(corner, 'mouseover', function(e) {
+        corner.style.cursor = cursor;
+      }, false);
+      bind(corner, 'mouseout', function(e) {
+        corner.style.cursor = 'auto';
+      }, false);
+      return corner;
     };
 
     return Square;
@@ -94,10 +116,10 @@
 
     // private varialbles
     var self, add_btn, clear_btn;
-    var mouse_down = false;
-    var mouse_x0, mouse_y0, square_x0, square_y0;
+    var square_mouse_down = false, corner_mouse_down = false;
+    var mouse_x0, mouse_y0, square_x0, square_y0, corner_x0, corner_y0, square_height0, square_width0;
     var zindex = 1;
-    var captured_square = null;
+    var captured_square = null, captured_corner = null;
 
     // constructor
     function Canvas(node) {
@@ -141,6 +163,11 @@
       square.el.style.left = square.el.offsetLeft + Math.round((self.el.offsetWidth - square.el.offsetWidth) / 2) + 'px';
       square.el.style.zIndex = zindex++;
       bind(square.el, 'mousedown', on_square_mouse_down, false);
+
+      bind(square.nw_corner, 'mousedown', on_corner_mouse_down , false);
+      bind(square.ne_corner, 'mousedown', on_corner_mouse_down , false);
+      bind(square.sw_corner, 'mousedown', on_corner_mouse_down , false);
+      bind(square.se_corner, 'mousedown', on_corner_mouse_down , false);
     };
 
     var on_clear_button_click = function(e) {
@@ -152,34 +179,84 @@
     };
 
     var on_square_mouse_down = function(e) {
-      mouse_down = true;
+      e || (e = window.event);
+
       captured_square = get_element(e);
-      captured_square.style.cursor = 'move';
+      if (captured_square.className === 'square') {
+        square_mouse_down = true;
+        captured_square.style.cursor = 'move';
 
-      mouse_x0 = e.clientX;
-      mouse_y0 = e.clientY;
+        mouse_x0 = e.clientX;
+        mouse_y0 = e.clientY;
 
-      square_x0 = captured_square.offsetLeft;
-      square_y0 = captured_square.offsetTop;
+        square_x0 = captured_square.offsetLeft;
+        square_y0 = captured_square.offsetTop;
 
+        block_event(e);
+      }
+    };
+
+    var on_corner_mouse_down = function(e) {
+      e || (e = window.event);
+
+      captured_corner = get_element(e);
+      if (captured_corner.className === 'corner') {
+        corner_mouse_down = true;
+
+        mouse_x0 = e.clientX;
+        mouse_y0 = e.clientY;
+
+        corner_x0 = captured_corner.offsetLeft;
+        conrner_y0 = captured_corner.offsetTop;
+
+        square_height0 = captured_corner.parentNode.offsetHeight;
+        square_width0 = captured_corner.parentNode.offsetWidth;
+
+        block_event(e);
+      }
     };
 
     var on_canvas_mouse_move = function(e) {
       e || (e = window.event);
 
-      if (mouse_down) {
-        var move_to = function(x, y) {
+      if (square_mouse_down) {
+        var move_to = function(dx, dy) {
 
-          captured_square.style.left = square_x0 + x + 'px';
-          captured_square.style.top = square_y0 + y + 'px';
+          captured_square.style.left = square_x0 + dx + 'px';
+          captured_square.style.top = square_y0 + dy + 'px';
         };
 
         move_to(e.clientX - mouse_x0, e.clientY - mouse_y0);
+        block_event(e);
+        return false;
+      }
+
+      if (corner_mouse_down) {
+        var resize_to = function(dx, dy) {
+          var square = captured_corner.parentNode;
+          var left = parseInt(captured_corner.style.left); isNaN(left) ? left = 0 : true;
+          var top = parseInt(captured_corner.style.top); isNaN(top) ? top = 0 : true;
+          var right = parseInt(captured_corner.style.right); isNaN(right) ? right = 0 : true;
+          var bottom = parseInt(captured_corner.style.bottom); isNaN(bottom) ? bottom = 0 : true;
+
+          if (left < 0 && top < 0) {              // north-west
+          } else if (left < 0 && bottom < 0) {    // south-west
+          } else if (right < 0 && top < 0) {      // north-east
+          } else if (right < 0 && bottom < 0) {   // south-east
+            square.style.height = ((square_height0 + dy < 12) ? 12 : (square_height0 + dy))  + 'px';
+            square.style.width = ((square_width0 + dx < 12) ? 12 : (square_width0 + dx)) + 'px';
+          }
+        };
+
+        resize_to(e.clientX - mouse_x0, e.clientY - mouse_y0);
+        block_event(e);
+        return false;
       }
     };
 
     var on_document_mouse_up = function(e) {
-      mouse_down = false;
+      square_mouse_down = false;
+      corner_mouse_down = false;
       if (captured_square) {
         captured_square.style.cursor = 'auto';
       }
