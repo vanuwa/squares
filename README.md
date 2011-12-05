@@ -9,6 +9,6 @@ var canvas = new Canvas();
 ```
 
 ## Support
-Firefox, Google Chrome, IE (8)
+Firefox (8), Google Chrome, Opera (11.52), Safari (5.1.2), IE (7,8)
 
-_Not tested_: IE6, IE7, Opera, Safari
+_Not tested_: IE6
