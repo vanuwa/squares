@@ -77,6 +77,7 @@
 
     // private methods: helpers and listeners
     
+    // build square element
     var build_element = function() {
       var el = document.createElement('div');
       el.id = new Date().getTime();
@@ -90,6 +91,7 @@
       return el;
     };
 
+    // build corner element
     var build_corner = function(parent_node, styles, cursor) {
       var corner = document.createElement('div');
       corner.className = 'corner';
@@ -117,7 +119,7 @@
     // private varialbles
     var self, add_btn, clear_btn;
     var square_mouse_down = false, corner_mouse_down = false;
-    var mouse_x0, mouse_y0, square_x0, square_y0, corner_x0, corner_y0, square_height0, square_width0;
+    var mouse_x0, mouse_y0, square_x0, square_y0, square_height0, square_width0;
     var zindex = 1;
     var captured_square = null, captured_corner = null;
 
@@ -149,8 +151,6 @@
       bind(document, 'mouseup', on_document_mouse_up, false);
     }
 
-
-    // public methods
 
     // private methods: helpers and listeners
 
@@ -205,10 +205,6 @@
 
         mouse_x0 = e.clientX;
         mouse_y0 = e.clientY;
-
-        corner_x0 = captured_corner.offsetLeft;
-        conrner_y0 = captured_corner.offsetTop;
-
         square_x0 = captured_corner.parentNode.offsetLeft;
         square_y0 = captured_corner.parentNode.offsetTop;
         square_height0 = captured_corner.parentNode.offsetHeight;
@@ -221,6 +217,7 @@
     var on_canvas_mouse_move = function(e) {
       e || (e = window.event);
 
+      // moving
       if (square_mouse_down) {
         var move_to = function(dx, dy) {
 
@@ -233,6 +230,7 @@
         return false;
       }
 
+      // resizing
       if (corner_mouse_down) {
         var resize_to = function(dx, dy) {
           var square = captured_corner.parentNode;
