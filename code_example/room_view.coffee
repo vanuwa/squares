@@ -7,6 +7,8 @@ $ = jQuery = ROOM.jQuery
 ROOM.RoomView = Backbone.View.extend
   el: $ '#' + ROOM.content_id
 
+  # template hardcoding
+  # TODO use the template-engine
   template: _.template '
     <div id="<%= ROOM.prefix %>entrance-popups" class="enter-popups"></div> <!-- Add a class .request-registration to prompt registration -->
     <div id="<%= ROOM.prefix %>recover-password-popup" class="recover-password-popup"></div>
