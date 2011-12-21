@@ -35,6 +35,17 @@
       element.detachEvent('on' + event_name, listener);
     }
   };
+
+  // helper for getting targer (src) element from event
+  function get_element(event) {
+    var element = null;
+    if (typeof event.target !== 'undefined') {
+      element = event.target;
+    } else if (typeof event.srcElement !== 'undefined'){
+      element = event.srcElement;
+    }
+    return element;
+  };
   
   // blocking events
   function block_event(e) {
@@ -135,21 +146,18 @@
 
       this.el = node;
 
-      add_btn = document.createElement('div');
-      add_btn.id = 'add_button';
-      add_btn.innerHTML = 'ADD';
+      add_btn = build_button('add_button', 'ADD');
       node.appendChild(add_btn);
       bind(add_btn, 'click', on_add_button_click, false);
 
-      clear_btn = document.createElement('div');
-      clear_btn.id = 'clear_button';
-      clear_btn.innerHTML = 'CLEAR';
+      clear_btn = build_button('clear_button', 'CLEAR');
       node.appendChild(clear_btn);
       bind(clear_btn, 'click', on_clear_button_click, false);
 
       bind(this.el, 'mousemove', on_canvas_mouse_move, false);
       bind(document, 'mouseup', on_document_mouse_up, false);
     }
+
 
 
     // private methods: helpers and listeners
@@ -272,15 +280,11 @@
       }
     };
 
-    // helper for getting targer (src) element from event
-    var get_element = function(event) {
-      var element = null;
-      if (typeof event.target !== 'undefined') {
-        element = event.target;
-      } else if (typeof event.srcElement !== 'undefined'){
-        element = event.srcElement;
-      }
-      return element;
+    var build_button = function(id, caption) {
+      var btn = document.createElement('div');
+      btn.id = id;
+      btn.innerHTML = caption;
+      return btn;
     };
 
     return Canvas;
